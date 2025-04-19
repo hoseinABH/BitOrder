@@ -5,6 +5,8 @@ import MainLayout from '@/components/main-layout';
 // Pages
 import { MarketDetails } from '@/pages/market-details';
 import { MarketList } from '@/pages/market-list';
+// Constants
+import * as Routes from '@/constants/routes';
 
 const router = createBrowserRouter([
   {
@@ -13,14 +15,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Navigate to="/market" />,
+        element: <Navigate to={Routes.CoinList} />,
       },
       {
-        path: '/market',
+        path: Routes.CoinList,
         element: <MarketList />,
       },
       {
-        path: '/market/:id',
+        path: `${Routes.CoinList}/:id`,
         element: <MarketDetails />,
       },
     ],

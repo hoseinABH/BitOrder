@@ -42,12 +42,12 @@ export interface PriceInfo {
   amount: Nullable<string>;
 }
 
-export type PriceBase = 'IRT' | 'USDT';
+export type BasePrice = 'IRT' | 'USDT';
 
 export interface CoinItem {
   id: number;
   currency1: Currency;
-  currency2: Currency<PriceBase>;
+  currency2: Currency<BasePrice>;
   tradable: boolean;
   otc_tradable: boolean;
   coming_soon: boolean;
