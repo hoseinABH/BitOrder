@@ -45,7 +45,7 @@ export function Pagination({ totalPages, currentPage, onPageChange }: Pagination
     return pages;
   }, [currentPage, totalPages]);
 
-  return (
+  return totalPages > 1 ? (
     <div className="mt-6 flex items-center justify-between gap-1 select-none md:justify-center">
       <Button
         variant="outline"
@@ -87,5 +87,5 @@ export function Pagination({ totalPages, currentPage, onPageChange }: Pagination
         <ChevronLeft className="size-4" />
       </Button>
     </div>
-  );
+  ) : null;
 }

@@ -3,22 +3,17 @@ import { CoinList } from '@/components/coin-list';
 import { Pagination } from '@/components/pagination';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Hooks
-import { useCallback, useMemo } from 'react';
+import { useMarket } from '@/hooks/market';
+import useMarketStore from '@/store/market';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 // Types
 import type { BasePrice } from '@/types/market';
 
-const mockCoins = Array.from({ length: 100 }, (_, i) => ({
-  id: i + 1,
-  name: `Coin ${i + 1}`,
-  symbol: `C${i + 1}`,
-  priceUSDT: Math.random() * 10000,
-  priceIRT: Math.random() * 10000 * 580000,
-  changePercentage: Math.random() * 20 - 10,
-}));
-
 export function MarketList() {
   const navigate = useNavigate();
+  const { getCoins } = useMarket();
+  const { coins } = useMarketStore();
   const [searchParams] = useSearchParams();
 
   const baseParam = searchParams.get('currency') || 'usdt';
@@ -60,12 +55,16 @@ export function MarketList() {
   );
 
   const itemsPerPage = 10;
-  const totalPages = Math.ceil(mockCoins.length / itemsPerPage);
+  const totalPages = Math.ceil(coins.length / itemsPerPage);
 
   const currentCoins = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    return mockCoins.slice(startIndex, startIndex + itemsPerPage);
-  }, [currentPage]);
+    return coins.slice(startIndex, startIndex + itemsPerPage);
+  }, [coins, currentPage]);
+
+  useEffect(() => {
+    getCoins();
+  }, []);
 
   return (
     <div className="w-full">

@@ -1,48 +1,95 @@
 import { Link } from 'react-router-dom';
+// Common components
+import { ChevronLeft } from 'lucide-react';
+import { LazyImage } from './lazy-image';
+import { Skeleton } from './ui/skeleton';
 // Utilities
 import { cn } from '@/lib/utils';
 // Hooks
 import { useMemo } from 'react';
+// Constants
+import * as Routes from '@/constants/routes';
 // Types
-import type { BasePrice } from '@/types/market';
+import type { BasePrice, MarketCoin } from '@/types/market';
 
 interface CoinCardProps {
-  coin: any;
+  coin: MarketCoin;
   basePrice: BasePrice;
 }
 
 export function CoinCard({ coin, basePrice }: CoinCardProps) {
   const isUSDT = basePrice === 'USDT';
-  const price = isUSDT ? coin.priceUSDT : coin.priceIRT;
+
+  const targetCoin = useMemo(() => {
+    const base = basePrice.toLowerCase() as 'irt' | 'usdt';
+    return coin[base];
+  }, [basePrice, coin]);
+
   const formattedPrice = useMemo(() => {
     return new Intl.NumberFormat('en-US', {
       minimumFractionDigits: isUSDT ? 2 : 0,
       maximumFractionDigits: isUSDT ? 2 : 0,
-    }).format(price);
-  }, [isUSDT, price]);
-  const changeColor = coin.changePercentage >= 0 ? 'text-green-500' : 'text-red-500';
+    }).format(targetCoin.price);
+  }, [isUSDT, targetCoin.price]);
+
+  const positiveChange = targetCoin.changePercentage >= 0;
+
+  const changeColor = positiveChange ? 'text-green-500' : 'text-red-500';
 
   return (
-    <Link to="/">
-      <div className="dark:hover:bg-card hover:bg-muted border-accent grid grid-cols-3 items-center overflow-hidden border-b px-4 py-6 text-xs transition-colors md:text-sm">
-        <div className="flex items-center gap-2">
-          <div className="from-primary/20 to-primary/40 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold">
-            {coin.symbol}
+    <Link className="group" to={`${Routes.CoinList}/${coin.id}`}>
+      <div className="dark:hover:bg-card hover:bg-muted border-accent grid grid-cols-3 items-center gap-1 overflow-hidden border-b px-4 py-6 text-xs transition-colors md:grid-cols-4 md:text-sm">
+        <div className="flex w-full items-center gap-2">
+          <div className="relative aspect-square size-8 md:size-14">
+            <LazyImage
+              src={coin.image}
+              alt={targetCoin.name}
+              className="absolute size-full rounded-full"
+            />
           </div>
           <div>
-            <h3 className="font-medium">{coin.name}</h3>
-            <p className="text-muted-foreground text-xs">{coin.symbol}</p>
+            <p className="text-xs font-medium md:text-sm lg:text-lg">{targetCoin.name}</p>
+            <p className="text-muted-foreground text-xs lg:text-sm">{targetCoin.name_fa}</p>
           </div>
         </div>
-        <div className="text-right">
-          <p className="font-sans font-semibold">{formattedPrice}</p>
-          <p className="text-muted-foreground text-xs">{basePrice.toUpperCase()}</p>
+        <div className="w-full text-left md:text-right">
+          <p className="font-sans text-xs font-semibold lg:text-sm">{formattedPrice}</p>
+          <p className="text-muted-foreground text-xs lg:text-sm">{basePrice.toUpperCase()}</p>
         </div>
-        <div dir="ltr" className={cn('text-right', changeColor)}>
-          <span>{coin.changePercentage >= 0 ? '+' : ''}</span>
-          <span className="font-sans">{coin.changePercentage.toFixed(2)}</span>
+        <div dir="ltr" className={cn('w-full text-left md:text-right', changeColor)}>
+          <span>{positiveChange ? '+' : ''}</span>
+          <span className="font-sans text-xs lg:text-sm">
+            {targetCoin.changePercentage.toFixed(2)}
+          </span>
+        </div>
+        <div className="text-muted-foreground hidden items-center justify-end gap-2 font-semibold md:flex">
+          اطلاعات بیشتر
+          <ChevronLeft className="size-4 transition-transform group-hover:-translate-x-1" />
         </div>
       </div>
     </Link>
+  );
+}
+
+export function CoinCardSkeleton() {
+  return (
+    <div className="dark:hover:bg-card hover:bg-muted border-accent grid grid-cols-3 items-center gap-1 overflow-hidden border-b px-4 py-6 text-xs transition-colors md:grid-cols-4 md:text-sm">
+      <div className="flex w-full items-center gap-2">
+        <div className="relative aspect-square size-8 md:size-14">
+          <Skeleton className="absolute size-full rounded-full" />
+        </div>
+        <div className="w-full space-y-2">
+          <Skeleton className="h-4 w-16 md:h-6 md:w-28" />
+          <Skeleton className="h-4 w-14" />
+        </div>
+      </div>
+      <div className="flex flex-col items-end gap-y-2 md:items-start">
+        <Skeleton className="h-4 w-16 md:h-6 md:w-28" />
+        <Skeleton className="h-2 w-6 md:h-4 md:w-8" />
+      </div>
+      <div className="flex justify-end md:justify-start">
+        <Skeleton className="h-4 w-14 md:h-6 md:w-28" />
+      </div>
+    </div>
   );
 }

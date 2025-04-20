@@ -86,9 +86,25 @@ export interface CoinItem {
   price_increment: Nullable<number>;
 }
 
-export interface GetMarketsResponse {
+export interface GetCoinListResponse {
   count: number;
   next: Nullable<string>;
   previous: Nullable<string>;
   results: CoinItem[];
+}
+export type LoadingKeys = 'getAllCoins';
+
+export type MarketLoading = Record<LoadingKeys, boolean>;
+
+export interface CoinInfo {
+  name: string;
+  name_fa: string;
+  price: number;
+  changePercentage: number;
+}
+export interface MarketCoin {
+  id: number;
+  image: string;
+  usdt: CoinInfo;
+  irt: CoinInfo;
 }
