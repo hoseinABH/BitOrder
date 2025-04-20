@@ -1,6 +1,8 @@
 // Common components
 import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
 import { buttonVariants } from './ui/button';
+// Constants
+import * as Routes from '@/constants/routes';
 // Types
 import type { HTMLAttributes } from 'react';
 
@@ -24,7 +26,7 @@ export default function GlobalError() {
         <h2 className="font-sans text-3xl font-bold">{error.status}</h2>
         <p className="text-xl">{error.statusText}</p>
         {error.data && <p className="text-xl">{error.data}</p>}
-        <Link to="/market" className={buttonVariants()}>
+        <Link to={Routes.CoinList} className={buttonVariants()}>
           Back To Market
         </Link>
       </ErrorContainer>

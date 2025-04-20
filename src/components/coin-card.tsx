@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 // Utilities
 import { cn } from '@/lib/utils';
 // Hooks
@@ -18,12 +19,12 @@ export function CoinCard({ coin, basePrice }: CoinCardProps) {
       minimumFractionDigits: isUSDT ? 2 : 0,
       maximumFractionDigits: isUSDT ? 2 : 0,
     }).format(price);
-  }, [price, basePrice]);
+  }, [isUSDT, price]);
   const changeColor = coin.changePercentage >= 0 ? 'text-green-500' : 'text-red-500';
 
   return (
-    <div className="dark:hover:bg-card hover:bg-muted border-accent overflow-hidden border-b p-4 text-xs transition-colors md:text-sm">
-      <div className="grid grid-cols-3 items-center">
+    <Link to="/">
+      <div className="dark:hover:bg-card hover:bg-muted border-accent grid grid-cols-3 items-center overflow-hidden border-b px-4 py-6 text-xs transition-colors md:text-sm">
         <div className="flex items-center gap-2">
           <div className="from-primary/20 to-primary/40 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br text-xs font-bold">
             {coin.symbol}
@@ -42,6 +43,6 @@ export function CoinCard({ coin, basePrice }: CoinCardProps) {
           <span className="font-sans">{coin.changePercentage.toFixed(2)}</span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

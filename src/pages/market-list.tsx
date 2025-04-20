@@ -40,7 +40,7 @@ export function MarketList() {
       }
       navigate(`?${params.toString()}`);
     },
-    [searchParams],
+    [navigate, searchParams],
   );
 
   // Handle base price change
@@ -72,8 +72,8 @@ export function MarketList() {
       <h1 className="text-3xl md:text-4xl lg:text-5xl">قیمت ارز های دیجیتال</h1>
       <Tabs defaultValue={basePrice} onValueChange={handleBaseChange} className="mt-12 mb-6">
         <TabsList className="grid w-[200px] grid-cols-2">
-          <TabsTrigger value="USDT">تتر</TabsTrigger>
-          <TabsTrigger value="IRT">تومان</TabsTrigger>
+          <TabsTrigger value="USDT">پایه تتر</TabsTrigger>
+          <TabsTrigger value="IRT">پایه تومان</TabsTrigger>
         </TabsList>
       </Tabs>
       <CoinList coins={currentCoins} basePrice={basePrice} />
