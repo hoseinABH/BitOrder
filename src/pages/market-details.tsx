@@ -97,7 +97,7 @@ export function MarketDetails() {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
       >
-        <TabsList className="mb-6 grid w-full grid-cols-3 md:w-1/3">
+        <TabsList className="mb-6 grid w-full grid-cols-3 md:w-1/2 lg:h-1/3">
           <TabsTrigger value="buy">سفارشات خرید</TabsTrigger>
           <TabsTrigger value="sell">سفارشات فروش</TabsTrigger>
           <TabsTrigger value="transactions">معاملات</TabsTrigger>

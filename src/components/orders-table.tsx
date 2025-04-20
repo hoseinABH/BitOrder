@@ -1,11 +1,15 @@
 // Common components
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
+import { buttonVariants } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 // Utilities
 import { cn, formatNumber } from '@/lib/utils';
+// Constants
+import * as Routes from '@/constants/routes';
 // Types
 import type { Order, OrderType } from '@/types/market';
-
 interface OrdersTableProps {
   orderType: OrderType;
   orders: Order[];
@@ -14,9 +18,14 @@ interface OrdersTableProps {
 export function OrdersTable({ orderType, orders }: OrdersTableProps) {
   return (
     <Fragment>
-      <div className="mb-6 flex items-baseline gap-2">
-        <span className="size-2 animate-pulse rounded-full bg-green-600"></span>
-        <p className="text-lg font-medium">سفارشات {orderType === 'buy' ? 'خرید' : 'فروش'}</p>
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-baseline gap-2">
+          <span className="size-2 animate-pulse rounded-full bg-green-600"></span>
+          <p className="text-lg font-medium">سفارشات {orderType === 'buy' ? 'خرید' : 'فروش'}</p>
+        </div>
+        <Link to={Routes.CoinList} className={buttonVariants({ variant: 'link' })}>
+          لیست رمزارزها <ArrowLeft />
+        </Link>
       </div>
       <Table>
         <TableHeader>
