@@ -1,6 +1,7 @@
-import { CoinItem, MarketCoin } from '@/types/market';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+// Types
+import type { CoinItem, MarketCoin } from '@/types/market';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -57,4 +58,24 @@ export function normalizeMarketCoins(coinList: CoinItem[]): MarketCoin[] {
   }
 
   return Array.from(map.values());
+}
+
+export function normalizeMarketData<T>(data: T[]): T[] {
+  return data.slice(0, 10);
+}
+
+export function formatNumber(num: number, isUsdt = false): string {
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: isUsdt ? 2 : 0,
+    maximumFractionDigits: isUsdt ? 2 : 0,
+  }).format(num);
+}
+
+export function formatTime(isoString: string): string {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
 }

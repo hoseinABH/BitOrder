@@ -100,7 +100,7 @@ export function MarketList() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div>
       <h1 className="text-3xl md:text-4xl lg:text-5xl">قیمت ارز های دیجیتال</h1>
       <Tabs
         value={currency}

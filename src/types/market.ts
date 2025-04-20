@@ -92,7 +92,7 @@ export interface GetCoinListResponse {
   previous: Nullable<string>;
   results: CoinItem[];
 }
-export type LoadingKeys = 'getAllCoins';
+export type LoadingKeys = 'getAllCoins' | 'getMarketDetails';
 
 export type MarketLoading = Record<LoadingKeys, boolean>;
 
@@ -107,4 +107,33 @@ export interface MarketCoin {
   image: string;
   usdt: CoinInfo;
   irt: CoinInfo;
+}
+
+export type OrderType = 'buy' | 'sell';
+
+export interface Order {
+  amount: string;
+  remain: string;
+  price: string;
+  value: string;
+}
+
+export interface GetOrdersResponse {
+  orders: Order[];
+  volume: string;
+}
+
+export interface Transaction {
+  time: number;
+  price: string;
+  value: string;
+  match_amount: string;
+  type: OrderType;
+  match_id: string;
+}
+
+export interface MarketData {
+  buyOrders: Order[];
+  sellOrders: Order[];
+  transactions: Transaction[];
 }

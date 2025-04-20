@@ -4,7 +4,7 @@ import { ChevronLeft } from 'lucide-react';
 import { LazyImage } from './lazy-image';
 import { Skeleton } from './ui/skeleton';
 // Utilities
-import { cn } from '@/lib/utils';
+import { cn, formatNumber } from '@/lib/utils';
 // Hooks
 import { useMemo } from 'react';
 // Constants
@@ -25,10 +25,7 @@ export function CoinCard({ coin, currency }: CoinCardProps) {
   }, [currency, coin]);
 
   const formattedPrice = useMemo(() => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: isUSDT ? 2 : 0,
-      maximumFractionDigits: isUSDT ? 2 : 0,
-    }).format(targetCoin.price);
+    return formatNumber(targetCoin.price, isUSDT);
   }, [isUSDT, targetCoin.price]);
 
   const positiveChange = targetCoin.changePercentage >= 0;
