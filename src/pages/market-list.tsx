@@ -4,30 +4,33 @@ import { Pagination } from '@/components/pagination';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 // Hooks
 import { useMarket } from '@/hooks/market';
-import useMarketStore from '@/store/market';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useMarketStore } from '@/store/market';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-// Types
-import type { BasePrice } from '@/types/market';
+
+type CoinBase = 'irt' | 'usdt';
 
 export function MarketList() {
   const navigate = useNavigate();
   const { getCoins } = useMarket();
   const { coins } = useMarketStore();
   const [searchParams] = useSearchParams();
+  const minSwipeDistance = 50;
 
-  const baseParam = searchParams.get('currency') || 'usdt';
-  const pageParam = searchParams.get('page') || '1';
+  const currency = (searchParams.get('currency') || 'usdt') as CoinBase;
+  const page = searchParams.get('page') || '1';
 
-  const currentPage = Number.parseInt(pageParam, 10);
-  const basePrice = baseParam.toUpperCase() as BasePrice;
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const currentPage = Number.parseInt(page, 10);
 
   const updateUrlParams = useCallback(
-    (newBase?: string, newPage?: number) => {
+    (newCurrency?: string, newPage?: number) => {
       const params = new URLSearchParams(searchParams.toString());
 
-      if (newBase) {
-        params.set('currency', newBase);
+      if (newCurrency) {
+        params.set('currency', newCurrency);
       }
 
       if (newPage) {
@@ -38,15 +41,13 @@ export function MarketList() {
     [navigate, searchParams],
   );
 
-  // Handle base price change
-  const handleBaseChange = useCallback(
+  const handleCurrencyChange = useCallback(
     (value: string) => {
       updateUrlParams(value, undefined);
     },
     [updateUrlParams],
   );
 
-  // Handle page change
   const handlePageChange = useCallback(
     (page: number) => {
       updateUrlParams(undefined, page);
@@ -62,6 +63,38 @@ export function MarketList() {
     return coins.slice(startIndex, startIndex + itemsPerPage);
   }, [coins, currentPage]);
 
+  function handleSwipe() {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && currency === 'irt') {
+      handleCurrencyChange('usdt');
+    }
+
+    if (isRightSwipe && currency === 'usdt') {
+      handleCurrencyChange('irt');
+    }
+  }
+
+  function onTouchStart(e: React.TouchEvent) {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  }
+
+  function onTouchMove(e: React.TouchEvent) {
+    setTouchEnd(e.targetTouches[0].clientX);
+  }
+
+  function onTouchEnd() {
+    if (!touchStart || !touchEnd) return;
+    handleSwipe();
+    setTouchStart(null);
+    setTouchEnd(null);
+  }
+
   useEffect(() => {
     getCoins();
   }, []);
@@ -69,13 +102,23 @@ export function MarketList() {
   return (
     <div className="w-full">
       <h1 className="text-3xl md:text-4xl lg:text-5xl">قیمت ارز های دیجیتال</h1>
-      <Tabs defaultValue={basePrice} onValueChange={handleBaseChange} className="mt-12 mb-6">
-        <TabsList className="grid w-[200px] grid-cols-2">
-          <TabsTrigger value="USDT">پایه تتر</TabsTrigger>
-          <TabsTrigger value="IRT">پایه تومان</TabsTrigger>
+      <Tabs
+        value={currency}
+        onValueChange={handleCurrencyChange}
+        className="mt-12 mb-6 items-center md:items-start"
+      >
+        <TabsList className="grid w-full grid-cols-2 md:w-[200px]">
+          <TabsTrigger value="usdt">پایه تتر</TabsTrigger>
+          <TabsTrigger value="irt">پایه تومان</TabsTrigger>
         </TabsList>
       </Tabs>
-      <CoinList coins={currentCoins} basePrice={basePrice} />
+      <CoinList
+        coins={currentCoins}
+        currency={currency}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      />
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

@@ -2,7 +2,8 @@
 import { getCoinList } from '@/services/market';
 // Utilities
 import { normalizeMarketCoins } from '@/lib/utils';
-import useMarketStore from '@/store/market';
+// Hooks
+import { useMarketStore } from '@/store/market';
 
 export function useMarket() {
   const { setLoading, setCoins } = useMarketStore();

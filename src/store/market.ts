@@ -21,10 +21,8 @@ const initialValues: MarketValues = {
   coins: [],
 };
 
-const useMarketStore = create<MarketState>((set) => ({
+export const useMarketStore = create<MarketState>((set) => ({
   ...initialValues,
   setCoins: (coins) => set({ coins }),
   setLoading: (status, key) => set((state) => ({ loading: { ...state.loading, [key]: status } })),
 }));
-
-export default useMarketStore;

@@ -10,20 +10,19 @@ import { useMemo } from 'react';
 // Constants
 import * as Routes from '@/constants/routes';
 // Types
-import type { BasePrice, MarketCoin } from '@/types/market';
+import type { MarketCoin } from '@/types/market';
 
 interface CoinCardProps {
   coin: MarketCoin;
-  basePrice: BasePrice;
+  currency: 'irt' | 'usdt';
 }
 
-export function CoinCard({ coin, basePrice }: CoinCardProps) {
-  const isUSDT = basePrice === 'USDT';
+export function CoinCard({ coin, currency }: CoinCardProps) {
+  const isUSDT = currency === 'usdt';
 
   const targetCoin = useMemo(() => {
-    const base = basePrice.toLowerCase() as 'irt' | 'usdt';
-    return coin[base];
-  }, [basePrice, coin]);
+    return coin[currency];
+  }, [currency, coin]);
 
   const formattedPrice = useMemo(() => {
     return new Intl.NumberFormat('en-US', {
@@ -54,7 +53,7 @@ export function CoinCard({ coin, basePrice }: CoinCardProps) {
         </div>
         <div className="w-full text-left md:text-right">
           <p className="font-sans text-xs font-semibold lg:text-sm">{formattedPrice}</p>
-          <p className="text-muted-foreground text-xs lg:text-sm">{basePrice.toUpperCase()}</p>
+          <p className="text-muted-foreground text-xs lg:text-sm">{currency.toUpperCase()}</p>
         </div>
         <div dir="ltr" className={cn('w-full text-left md:text-right', changeColor)}>
           <span>{positiveChange ? '+' : ''}</span>
