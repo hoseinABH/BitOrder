@@ -24,9 +24,7 @@ export function CoinList({ coins, currency, className }: CoinListProps) {
       </div>
       {loading.getAllCoins
         ? Array.from(Array(10)).map((_, index) => <CoinCardSkeleton key={index} />)
-        : coins.map((coin) => (
-            <CoinCard key={`${coin.irt.id}_${coin.usdt.id}`} coin={coin} currency={currency} />
-          ))}
+        : coins.map((coin) => <CoinCard key={coin.code} coin={coin} currency={currency} />)}
     </div>
   );
 }

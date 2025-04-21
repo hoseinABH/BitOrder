@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 // Common components
 import { ChevronLeft } from 'lucide-react';
@@ -16,8 +17,7 @@ interface CoinCardProps {
   coin: MarketCoin;
   currency: 'irt' | 'usdt';
 }
-
-export function CoinCard({ coin, currency }: CoinCardProps) {
+export const CoinCard = memo(function CoinCard({ coin, currency }: CoinCardProps) {
   const targetCoin = useMemo(() => {
     return coin[currency];
   }, [currency, coin]);
@@ -32,8 +32,9 @@ export function CoinCard({ coin, currency }: CoinCardProps) {
         <div className="flex w-full items-center gap-2">
           <div className="relative aspect-square size-8 md:size-14">
             <LazyImage
+              loading="lazy"
               src={coin.image}
-              alt={coin.image}
+              alt={coin.code}
               className="absolute size-full rounded-full"
             />
           </div>
@@ -61,7 +62,7 @@ export function CoinCard({ coin, currency }: CoinCardProps) {
       </div>
     </Link>
   );
-}
+});
 
 export function CoinCardSkeleton() {
   return (

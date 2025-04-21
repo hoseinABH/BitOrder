@@ -16,12 +16,13 @@ export function normalizeMarketCoins(coinList: CoinItem[]): MarketCoin[] {
   const map = new Map<string, MarketCoin>();
 
   for (const coin of coinList) {
-    const { currency1, currency2, id, price, title, title_fa, order_book_info } = coin;
+    const { currency1, currency2, id, price, title, title_fa, order_book_info, code } = coin;
     const key = currency1.code;
 
     if (!map.has(key)) {
       map.set(key, {
         image: currency1.image ?? '',
+        code,
         irt: {
           id: 0,
           name: '',

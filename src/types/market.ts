@@ -105,6 +105,7 @@ export interface CoinInfo {
 }
 export interface MarketCoin {
   image: string;
+  code: string;
   usdt: CoinInfo;
   irt: CoinInfo;
 }
