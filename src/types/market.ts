@@ -97,13 +97,13 @@ export type LoadingKeys = 'getAllCoins' | 'getMarketDetails';
 export type MarketLoading = Record<LoadingKeys, boolean>;
 
 export interface CoinInfo {
+  id: number;
   name: string;
   name_fa: string;
   price: number;
   changePercentage: number;
 }
 export interface MarketCoin {
-  id: number;
   image: string;
   usdt: CoinInfo;
   irt: CoinInfo;

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { buttonVariants } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 // Utilities
-import { cn, formatNumber } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 // Constants
 import * as Routes from '@/constants/routes';
 // Types
@@ -43,7 +43,7 @@ export function OrdersTable({ orderType, orders }: OrdersTableProps) {
                   ['text-green-600 dark:text-green-300']: orderType === 'buy',
                 })}
               >
-                {formatNumber(order.price)}
+                {formatPrice(order.price)}
               </TableCell>
               <TableCell className="text-left">{order.amount}</TableCell>
             </TableRow>

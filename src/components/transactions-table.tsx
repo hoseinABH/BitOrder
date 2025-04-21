@@ -5,7 +5,7 @@ import { Fragment } from 'react/jsx-runtime';
 import { buttonVariants } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 // Utilities
-import { cn, formatNumber, formatTime } from '@/lib/utils';
+import { cn, formatPrice, formatTime } from '@/lib/utils';
 // Constants
 import * as Routes from '@/constants/routes';
 // Types
@@ -44,7 +44,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                   ['text-green-600 dark:text-green-300']: transaction.type === 'buy',
                 })}
               >
-                {formatNumber(transaction.price)}
+                {formatPrice(transaction.price)}
               </TableCell>
               <TableCell className="w-1/3 text-center">{transaction.match_amount}</TableCell>
               <TableCell className="w-1/3 text-left">

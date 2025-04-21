@@ -4,7 +4,7 @@ import { ChevronLeft } from 'lucide-react';
 import { LazyImage } from './lazy-image';
 import { Skeleton } from './ui/skeleton';
 // Utilities
-import { cn, formatNumber } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 // Hooks
 import { useMemo } from 'react';
 // Constants
@@ -18,28 +18,22 @@ interface CoinCardProps {
 }
 
 export function CoinCard({ coin, currency }: CoinCardProps) {
-  const isUSDT = currency === 'usdt';
-
   const targetCoin = useMemo(() => {
     return coin[currency];
   }, [currency, coin]);
-
-  const formattedPrice = useMemo(() => {
-    return formatNumber(targetCoin.price, isUSDT);
-  }, [isUSDT, targetCoin.price]);
 
   const positiveChange = targetCoin.changePercentage >= 0;
 
   const changeColor = positiveChange ? 'text-green-500' : 'text-red-500';
 
   return (
-    <Link className="group" to={`${Routes.CoinList}/${coin.id}`}>
+    <Link className="group" to={`${Routes.CoinList}/${targetCoin.id}`}>
       <div className="dark:hover:bg-card hover:bg-muted border-accent grid grid-cols-3 items-center gap-1 overflow-hidden border-b px-4 py-6 text-xs transition-colors md:grid-cols-4 md:text-sm">
         <div className="flex w-full items-center gap-2">
           <div className="relative aspect-square size-8 md:size-14">
             <LazyImage
               src={coin.image}
-              alt={targetCoin.name}
+              alt={coin.image}
               className="absolute size-full rounded-full"
             />
           </div>
@@ -49,13 +43,15 @@ export function CoinCard({ coin, currency }: CoinCardProps) {
           </div>
         </div>
         <div className="w-full text-left md:text-right">
-          <p className="font-sans text-xs font-semibold lg:text-sm">{formattedPrice}</p>
+          <p className="font-sans text-xs font-semibold lg:text-sm">
+            {formatPrice(targetCoin.price)}
+          </p>
           <p className="text-muted-foreground text-xs lg:text-sm">{currency.toUpperCase()}</p>
         </div>
         <div dir="ltr" className={cn('w-full text-left md:text-right', changeColor)}>
           <span>{positiveChange ? '+' : ''}</span>
           <span className="font-sans text-xs lg:text-sm">
-            {targetCoin.changePercentage.toFixed(2)}
+            {(targetCoin.changePercentage * 100).toFixed(2) + '%'}
           </span>
         </div>
         <div className="text-muted-foreground hidden items-center justify-end gap-2 font-semibold md:flex">
