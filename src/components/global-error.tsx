@@ -16,7 +16,7 @@ function ErrorContainer({ children, ...rest }: HTMLAttributes<HTMLDivElement>) {
     </div>
   );
 }
-export default function GlobalError() {
+export function GlobalError() {
   const error = useRouteError();
   console.error(error);
   if (isRouteErrorResponse(error)) {

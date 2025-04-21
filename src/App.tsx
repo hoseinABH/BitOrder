@@ -1,32 +1,43 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 // Common components
-import GlobalError from '@/components/global-error';
-import MainLayout from '@/components/main-layout';
-// Pages
-import { MarketDetails } from '@/pages/market-details';
-import { MarketList } from '@/pages/market-list';
+import { GlobalError } from '@/components/global-error';
+import { MainLayout } from '@/components/main-layout';
+import { Spinner } from './components/ui/spinner';
 // Constants
 import * as Routes from '@/constants/routes';
+
+// Pages
+const MarketList = lazy(() => import('@/pages/market-list'));
+const MarketDetails = lazy(() => import('@/pages/market-details'));
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <MainLayout />,
+    errorElement: <GlobalError />,
     children: [
       {
-        path: '/',
-        element: <Navigate to={Routes.CoinList} />,
+        index: true,
+        element: <Navigate to={Routes.CoinList} replace />,
       },
       {
         path: Routes.CoinList,
-        element: <MarketList />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <MarketList />
+          </Suspense>
+        ),
       },
       {
         path: `${Routes.CoinList}/:id`,
-        element: <MarketDetails />,
+        element: (
+          <Suspense fallback={<Spinner />}>
+            <MarketDetails />
+          </Suspense>
+        ),
       },
     ],
-    errorElement: <GlobalError />,
   },
 ]);
 

@@ -44,7 +44,7 @@ export function TransactionsTable({ transactions }: TransactionsTableProps) {
                   ['text-green-600 dark:text-green-300']: transaction.type === 'buy',
                 })}
               >
-                {formatNumber(+transaction.price)}
+                {formatNumber(transaction.price)}
               </TableCell>
               <TableCell className="w-1/3 text-center">{transaction.match_amount}</TableCell>
               <TableCell className="w-1/3 text-left">

@@ -1,7 +1,7 @@
 // Common components
 import { ArrowLeft } from 'lucide-react';
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Fragment } from 'react/jsx-runtime';
 import { buttonVariants } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 // Utilities
@@ -43,7 +43,7 @@ export function OrdersTable({ orderType, orders }: OrdersTableProps) {
                   ['text-green-600 dark:text-green-300']: orderType === 'buy',
                 })}
               >
-                {formatNumber(+order.price)}
+                {formatNumber(order.price)}
               </TableCell>
               <TableCell className="text-left">{order.amount}</TableCell>
             </TableRow>

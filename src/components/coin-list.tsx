@@ -6,18 +6,17 @@ import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/store/market';
 // Types
 import type { MarketCoin } from '@/types/market';
-import type { HtmlHTMLAttributes } from 'react';
 
-interface CoinListProps extends HtmlHTMLAttributes<HTMLDivElement> {
+interface CoinListProps {
   coins: MarketCoin[];
   currency: 'irt' | 'usdt';
   className?: string;
 }
 
-export function CoinList({ coins, currency, className, ...rest }: CoinListProps) {
+export function CoinList({ coins, currency, className }: CoinListProps) {
   const { loading } = useMarketStore();
   return (
-    <div className={cn('', className)} {...rest}>
+    <div className={cn('', className)}>
       <div className="bg-background sticky top-0 z-20 grid grid-cols-3 rounded-t-md p-4 text-sm font-medium md:grid-cols-4 md:text-lg">
         <p>نام رمزارز</p>
         <p className="text-left md:text-right">آخرین قیمت</p>

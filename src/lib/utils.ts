@@ -56,7 +56,6 @@ export function normalizeMarketCoins(coinList: CoinItem[]): MarketCoin[] {
       };
     }
   }
-
   return Array.from(map.values());
 }
 
@@ -64,11 +63,14 @@ export function normalizeMarketData<T>(data: T[]): T[] {
   return data.slice(0, 10);
 }
 
-export function formatNumber(num: number, isUsdt = false): string {
+export function formatNumber(input: string | number, isUsdt = false): string {
+  const number = safeParse(input);
   return new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    useGrouping: true,
     minimumFractionDigits: isUsdt ? 2 : 0,
     maximumFractionDigits: isUsdt ? 2 : 0,
-  }).format(num);
+  }).format(number);
 }
 
 export function formatTime(isoString: string): string {
