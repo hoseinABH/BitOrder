@@ -16,11 +16,13 @@ export function normalizeMarketCoins(coinList: CoinItem[]): MarketCoin[] {
   const map = new Map<string, MarketCoin>();
 
   for (const coin of coinList) {
-    const key = coin.currency1.code;
+    const { currency1, currency2, id, price, title, title_fa, order_book_info } = coin;
+    const key = currency1.code;
+
     if (!map.has(key)) {
       map.set(key, {
-        id: coin.id,
-        image: coin.currency1.image ?? '',
+        id,
+        image: currency1.image ?? '',
         irt: {
           name: '',
           name_fa: '',
@@ -37,22 +39,14 @@ export function normalizeMarketCoins(coinList: CoinItem[]): MarketCoin[] {
     }
 
     const current = map.get(key)!;
+    const target = currency2.code.toLowerCase() as 'irt' | 'usdt';
 
-    if (coin.currency2.code === 'IRT') {
-      current.irt = {
-        price: safeParse(coin.price),
-        name: coin.title,
-        name_fa: coin.title_fa,
-        changePercentage: coin.order_book_info.change,
-      };
-    }
-
-    if (coin.currency2.code === 'USDT') {
-      current.usdt = {
-        price: safeParse(coin.price),
-        name: coin.title,
-        name_fa: coin.title_fa,
-        changePercentage: coin.order_book_info.change,
+    if (target === 'irt' || target === 'usdt') {
+      current[target] = {
+        name: title,
+        name_fa: title_fa,
+        price: safeParse(price),
+        changePercentage: order_book_info?.change ?? 0,
       };
     }
   }
