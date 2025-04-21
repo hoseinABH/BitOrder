@@ -2,6 +2,7 @@
 import { ArrowLeft } from 'lucide-react';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { OrdersSummary } from './orders-summary';
 import { buttonVariants } from './ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 // Utilities
@@ -50,6 +51,7 @@ export function OrdersTable({ orderType, orders }: OrdersTableProps) {
           ))}
         </TableBody>
       </Table>
+      <OrdersSummary className="mt-8" orders={orders} />
     </Fragment>
   );
 }
