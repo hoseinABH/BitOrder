@@ -1,7 +1,9 @@
+// Common components
+import { Input } from './ui/input';
 // Utilities
 import { cn, formatPrice, safeParse } from '@/lib/utils';
 // Hooks
-import { useMemo } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 // Types
 import type { Order } from '@/types/market';
 
@@ -10,11 +12,13 @@ interface OrdersSummaryProps {
   orders: Order[];
 }
 export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
-  const summaryData = useMemo(() => {
+  const [percentage, setPercentage] = useState<number | undefined>(undefined);
+
+  const { summaryArray, totalRemain, totalValue, weightedAvgPrice } = useMemo(() => {
     const totalRemain = orders.reduce((sum, order) => sum + safeParse(order.remain), 0);
     const totalValue = orders.reduce((sum, order) => sum + safeParse(order.value), 0);
     const weightedAvgPrice = totalRemain > 0 ? totalValue / totalRemain : 0;
-    return [
+    const summaryArray = [
       {
         key: 'totalRemain',
         value: totalRemain,
@@ -26,25 +30,74 @@ export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
         label: 'ارزش کل',
       },
       {
-        key: 'totalRemain',
+        key: 'weightedAvgPrice',
         value: formatPrice(weightedAvgPrice),
         label: 'میانگین وزنی قیمت',
       },
     ];
+    return {
+      summaryArray,
+      totalRemain,
+      totalValue,
+      weightedAvgPrice,
+    };
   }, [orders]);
+  const percentageCalculation = useMemo(() => {
+    const percentFactor = percentage ? percentage / 100 : 0;
+    const calculatedRemain = totalRemain * percentFactor;
+    const calculatedPayable = totalValue * percentFactor;
+    return {
+      totalRemain: calculatedRemain,
+      averagePrice: weightedAvgPrice,
+      totalPayable: calculatedPayable,
+    };
+  }, [percentage, totalRemain, totalValue, weightedAvgPrice]);
   return (
-    <div className={cn('grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3', className)}>
-      {summaryData.map((summary) => (
-        <div
-          key={summary.key}
-          className="bg-card flex flex-col items-center justify-center gap-4 rounded-md border border-dashed p-6"
-        >
-          <p className="text-foreground text-sm font-normal">{summary.label}</p>
-          <span className="text-muted-foreground text-lg font-bold md:text-xl">
-            {summary.value}
-          </span>
+    <Fragment>
+      <div className={cn('grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3', className)}>
+        {summaryArray.map((summary) => (
+          <div
+            key={summary.key}
+            className="bg-card flex flex-col items-center justify-center gap-4 rounded-md border border-dashed p-6"
+          >
+            <p className="text-foreground text-sm font-normal">{summary.label}</p>
+            <span className="text-muted-foreground text-lg font-bold md:text-xl">
+              {summary.value}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="bg-card mt-6 flex flex-col items-center justify-center gap-12 rounded-md border border-dashed p-6">
+        <Input
+          id="percentage"
+          type="number"
+          defaultValue={undefined}
+          min={0}
+          max={100}
+          value={percentage}
+          placeholder="درصد سفارشات باقی مانده (۵۰٪)"
+          dir="ltr"
+          maxLength={3}
+          onChange={(e) => setPercentage(Number(e.target.value))}
+          className="w-full max-w-[300px] placeholder:text-center"
+        />
+        <div className="grid w-full grid-cols-1 place-items-start gap-4 md:grid-cols-2 lg:grid-cols-3 lg:place-items-center">
+          <div>
+            <p className="text-sm font-medium">مجموع قابل دریافت</p>
+            <span className="text-lg font-semibold">{percentageCalculation.totalRemain}</span>
+          </div>
+          <div>
+            <p className="text-sm font-medium">میانگین قیمت</p>
+            <span className="text-lg font-semibold">
+              {formatPrice(percentageCalculation.averagePrice)}
+            </span>
+          </div>
+          <div>
+            <p className="text-sm font-medium">مجموع قابل پرداخت</p>
+            <span className="text-lg font-semibold">{percentageCalculation.totalPayable}</span>
+          </div>
         </div>
-      ))}
-    </div>
+      </div>
+    </Fragment>
   );
 }
