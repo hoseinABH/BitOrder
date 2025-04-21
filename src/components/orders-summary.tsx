@@ -74,14 +74,14 @@ export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
           min={0}
           max={100}
           value={percentage}
-          placeholder="درصد سفارشات باقی مانده (۵۰٪)"
+          placeholder="درصد سفارشات باقی مانده (٪)"
           dir="ltr"
           pattern="[0-9]*"
           aria-label="درصد سفارش"
           inputMode="numeric"
           maxLength={3}
           onChange={(e) => setPercentage(Number(e.target.value))}
-          className="w-full max-w-[300px] placeholder:text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          className="w-full max-w-[300px] text-center placeholder:text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <div className="grid w-full grid-cols-1 place-items-start gap-4 md:grid-cols-2 lg:grid-cols-3 lg:place-items-center">
           <div>
