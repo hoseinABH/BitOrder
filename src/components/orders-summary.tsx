@@ -14,7 +14,7 @@ interface OrdersSummaryProps {
 export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
   const [percentage, setPercentage] = useState<number | undefined>(undefined);
 
-  const { summaryArray, totalRemain, totalValue, weightedAvgPrice } = useMemo(() => {
+  const { summaryArray, totalRemain, weightedAvgPrice } = useMemo(() => {
     const totalRemain = orders.reduce((sum, order) => sum + safeParse(order.remain), 0);
     const totalValue = orders.reduce((sum, order) => sum + safeParse(order.value), 0);
     const weightedAvgPrice = totalRemain > 0 ? totalValue / totalRemain : 0;
@@ -45,13 +45,13 @@ export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
   const percentageCalculation = useMemo(() => {
     const percentFactor = percentage ? percentage / 100 : 0;
     const calculatedRemain = totalRemain * percentFactor;
-    const calculatedPayable = totalValue * percentFactor;
+    const calculatedPayable = weightedAvgPrice * calculatedRemain;
     return {
       totalRemain: calculatedRemain,
       averagePrice: weightedAvgPrice,
       totalPayable: calculatedPayable,
     };
-  }, [percentage, totalRemain, totalValue, weightedAvgPrice]);
+  }, [percentage, totalRemain, weightedAvgPrice]);
   return (
     <Fragment>
       <div className={cn('grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3', className)}>
@@ -69,7 +69,6 @@ export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
       </div>
       <div className="bg-card mt-6 flex flex-col items-center justify-center gap-12 rounded-md border border-dashed p-6">
         <Input
-          id="percentage"
           type="number"
           defaultValue={undefined}
           min={0}
@@ -77,9 +76,12 @@ export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
           value={percentage}
           placeholder="درصد سفارشات باقی مانده (۵۰٪)"
           dir="ltr"
+          pattern="[0-9]*"
+          aria-label="درصد سفارش"
+          inputMode="numeric"
           maxLength={3}
           onChange={(e) => setPercentage(Number(e.target.value))}
-          className="w-full max-w-[300px] placeholder:text-center"
+          className="w-full max-w-[300px] placeholder:text-center [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
         <div className="grid w-full grid-cols-1 place-items-start gap-4 md:grid-cols-2 lg:grid-cols-3 lg:place-items-center">
           <div>
@@ -94,7 +96,9 @@ export function OrdersSummary({ className, orders }: OrdersSummaryProps) {
           </div>
           <div>
             <p className="text-sm font-medium">مجموع قابل پرداخت</p>
-            <span className="text-lg font-semibold">{percentageCalculation.totalPayable}</span>
+            <span className="text-lg font-semibold">
+              {formatPrice(percentageCalculation.totalPayable)}
+            </span>
           </div>
         </div>
       </div>
