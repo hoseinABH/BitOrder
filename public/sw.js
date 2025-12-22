@@ -1,6 +1,28 @@
 const CACHE_NAME = 'app-cache-v1';
 const urlsToCache = ['/', '/index.html', '/manifest.json'];
 
+// Helper function to check if URL is cacheable
+function isCacheableRequest(request) {
+  try {
+    const url = new URL(request.url);
+
+    // Only cache http and https requests
+    if (!url.protocol.startsWith('http')) {
+      return false;
+    }
+
+    // Only cache GET requests
+    if (request.method !== 'GET') {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error checking cacheability:', error);
+    return false;
+  }
+}
+
 // Install event - cache assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -33,6 +55,11 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+  // Skip non-cacheable requests (like chrome-extension://)
+  if (!isCacheableRequest(event.request)) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((response) => {
       // Cache hit - return response
@@ -40,21 +67,31 @@ self.addEventListener('fetch', (event) => {
         return response;
       }
 
-      return fetch(event.request).then((response) => {
-        // Check if valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
+      return fetch(event.request)
+        .then((response) => {
+          // Check if valid response
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+
+          // Clone the response
+          const responseToCache = response.clone();
+
+          caches.open(CACHE_NAME).then((cache) => {
+            // Double-check before caching
+            if (isCacheableRequest(event.request)) {
+              cache.put(event.request, responseToCache).catch((error) => {
+                console.warn('Failed to cache:', event.request.url, error);
+              });
+            }
+          });
+
           return response;
-        }
-
-        // Clone the response
-        const responseToCache = response.clone();
-
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache);
+        })
+        .catch((error) => {
+          console.error('Fetch failed:', error);
+          throw error;
         });
-
-        return response;
-      });
     }),
   );
 });
