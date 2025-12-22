@@ -24,5 +24,5 @@ export function LazyImage(props: ImgHTMLAttributes<HTMLImageElement>) {
       }
     };
   }, []);
-  return <img {...props} ref={imageRef} src={inView ? props.src : '/vite.svg'} />;
+  return <img {...props} ref={imageRef} src={inView ? props.src : '/favicon.svg'} />;
 }
