@@ -1,5 +1,5 @@
 const CACHE_NAME = 'app-cache-v2';
-const urlsToCache = ['/', '/index.html', '/manifest.json'];
+const urlsToCache = ['/', '/index.html', '/site.webmanifest'];
 
 // Helper function to check if URL is cacheable
 function isCacheableRequest(request) {
