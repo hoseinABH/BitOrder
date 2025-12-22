@@ -1,4 +1,4 @@
-const CACHE_NAME = 'app-cache-v1';
+const CACHE_NAME = 'app-cache-v2';
 const urlsToCache = ['/', '/index.html', '/manifest.json'];
 
 // Helper function to check if URL is cacheable

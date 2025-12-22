@@ -1,16 +1,6 @@
-import { useEffect, useState } from 'react';
+import packageJson from '../../package.json';
 
 const AppVersion = () => {
-  const [version, setVersion] = useState('');
-
-  useEffect(() => {
-    // Fetch version from package.json
-    fetch('/package.json')
-      .then((res) => res.json())
-      .then((data) => setVersion(data.version))
-      .catch(() => setVersion('unknown'));
-  }, []);
-
   return (
     <div
       style={{
@@ -20,9 +10,13 @@ const AppVersion = () => {
         fontSize: '12px',
         color: '#666',
         fontFamily: 'monospace',
+        background: 'rgba(255, 255, 255, 0.8)',
+        padding: '4px 8px',
+        borderRadius: '4px',
+        backdropFilter: 'blur(4px)',
       }}
     >
-      v{version}
+      v{packageJson.version}
     </div>
   );
 };

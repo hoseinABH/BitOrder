@@ -5,6 +5,7 @@ import { useServiceWorker } from '@/hooks/useServiceWorker';
 import { useState } from 'react';
 import UpdateNotification from './update-notification';
 import AppVersion from './app-version';
+import InstallPrompt from './install-prompt';
 
 export function MainLayout() {
   const { showReload, reloadPage } = useServiceWorker();
@@ -25,6 +26,7 @@ export function MainLayout() {
         <UpdateNotification onUpdate={handleUpdate} onDismiss={handleDismiss} />
       )}
       <AppVersion />
+      <InstallPrompt />
     </main>
   );
 }

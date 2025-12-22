@@ -2,7 +2,7 @@ import { useInstallPrompt } from '@/hooks/useInstallPrompt';
 import { useEffect, useState } from 'react';
 
 interface InstallPopupProps {
-  delay?: number;
+  delay?: number; // Delay in milliseconds before showing popup
 }
 
 export default function InstallPrompt({ delay = 3000 }: InstallPopupProps) {
@@ -10,11 +10,8 @@ export default function InstallPrompt({ delay = 3000 }: InstallPopupProps) {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    console.log('Install state:', { isInstallable, isInstalled, showPopup });
-
     if (isInstallable && !isInstalled) {
       const timer = setTimeout(() => {
-        console.log('Showing install popup');
         setShowPopup(true);
       }, delay);
       return () => clearTimeout(timer);
@@ -30,26 +27,13 @@ export default function InstallPrompt({ delay = 3000 }: InstallPopupProps) {
     setShowPopup(false);
   };
 
-  if (!showPopup || isInstalled) {
-    console.log('Popup hidden:', { showPopup, isInstalled });
-    return null;
-  }
+  if (!showPopup || isInstalled) return null;
 
   return (
     <>
-      {/* Overlay */}
-      <div
-        className="animate-fadeIn fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm"
-        onClick={handleClose}
-      />
-
-      {/* Popup */}
-      <div className="animate-scaleIn fixed top-1/2 left-1/2 z-[10000] w-[calc(100vw-40px)] max-w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-[20px] bg-white p-10 shadow-[0_20px_60px_rgba(0,0,0,0.3)]">
-        {/* Close Button */}
-        <button
-          className="absolute top-4 right-4 flex cursor-pointer items-center justify-center rounded-lg border-none bg-transparent p-2 text-gray-400 transition-all hover:bg-gray-100 hover:text-gray-600"
-          onClick={handleClose}
-        >
+      <div className="install-popup-overlay" onClick={handleClose} />
+      <div className="install-popup">
+        <button className="install-popup-close" onClick={handleClose}>
           <svg
             width="24"
             height="24"
@@ -63,8 +47,7 @@ export default function InstallPrompt({ delay = 3000 }: InstallPopupProps) {
           </svg>
         </button>
 
-        {/* Icon */}
-        <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[20px] bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+        <div className="install-popup-icon">
           <svg
             width="64"
             height="64"
@@ -78,43 +61,33 @@ export default function InstallPrompt({ delay = 3000 }: InstallPopupProps) {
           </svg>
         </div>
 
-        {/* Title */}
-        <h2 className="m-0 mb-3 text-center text-[28px] font-bold text-gray-900">
-          Install Our App
-        </h2>
-
-        {/* Message */}
-        <p className="m-0 mb-8 text-center text-base leading-relaxed text-gray-600">
+        <h2 className="install-popup-title">Install Our App</h2>
+        <p className="install-popup-message">
           Get quick access to our app by installing it on your home screen. Experience faster
           loading and offline access!
         </p>
 
-        {/* Features */}
-        <div className="mb-8 grid grid-cols-3 gap-4">
-          <div className="flex flex-col items-center gap-2 text-center text-sm text-gray-700">
-            <span className="text-[32px]">⚡</span>
-            <span className="text-[13px] font-medium">Fast & Reliable</span>
+        <div className="install-popup-features">
+          <div className="install-popup-feature">
+            <span className="install-popup-feature-icon">⚡</span>
+            <span className="install-popup-feature-text">Fast & Reliable</span>
           </div>
-          <div className="flex flex-col items-center gap-2 text-center text-sm text-gray-700">
-            <span className="text-[32px]">📱</span>
-            <span className="text-[13px] font-medium">Works Offline</span>
+          <div className="install-popup-feature">
+            <span className="install-popup-feature-icon">📱</span>
+            <span className="install-popup-feature-text">Works Offline</span>
           </div>
-          <div className="flex flex-col items-center gap-2 text-center text-sm text-gray-700">
-            <span className="text-[32px]">🚀</span>
-            <span className="text-[13px] font-medium">Quick Access</span>
+          <div className="install-popup-feature">
+            <span className="install-popup-feature-icon">🚀</span>
+            <span className="install-popup-feature-text">Quick Access</span>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <button
-            className="flex-1 cursor-pointer rounded-[10px] border-2 border-gray-200 bg-white px-4 py-3.5 text-base font-semibold text-gray-600 transition-all hover:border-gray-300 hover:bg-gray-50"
-            onClick={handleClose}
-          >
+        <div className="install-popup-actions">
+          <button className="install-popup-btn install-popup-btn-dismiss" onClick={handleClose}>
             Maybe Later
           </button>
           <button
-            className="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border-none bg-gradient-to-br from-indigo-500 to-purple-600 px-4 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(102,126,234,0.4)] active:translate-y-0"
+            className="install-popup-btn install-popup-btn-install"
             onClick={handleInstallClick}
           >
             <svg
@@ -133,33 +106,6 @@ export default function InstallPrompt({ delay = 3000 }: InstallPopupProps) {
           </button>
         </div>
       </div>
-
-      {/* Animations */}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        
-        @keyframes scaleIn {
-          from {
-            transform: translate(-50%, -50%) scale(0.9);
-            opacity: 0;
-          }
-          to {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-          }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.3s ease-out;
-        }
-        
-        .animate-scaleIn {
-          animation: scaleIn 0.3s ease-out;
-        }
-      `}</style>
     </>
   );
 }
