@@ -220,3 +220,214 @@
     max-width: none;
   }
 }
+
+/* Overlay */
+.install-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease-out;
+  z-index: 9999;
+}
+
+/* Popup Container */
+.install-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 480px;
+  width: calc(100vw - 40px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: scaleIn 0.3s ease-out;
+  z-index: 10000;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Close Button */
+.install-popup-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.install-popup-close:hover {
+  background: #f5f5f5;
+  color: #666;
+}
+
+/* Icon Container */
+.install-popup-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+/* Title */
+.install-popup-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  text-align: center;
+  color: #1a1a1a;
+}
+
+/* Message */
+.install-popup-message {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+/* Features Container */
+.install-popup-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.install-popup-feature {
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.install-popup-feature-icon {
+  font-size: 32px;
+}
+
+.install-popup-feature-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Actions */
+.install-popup-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Buttons */
+.install-popup-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.install-popup-btn-dismiss {
+  border: 2px solid #e0e0e0;
+  background: white;
+  color: #666;
+}
+
+.install-popup-btn-dismiss:hover {
+  border-color: #ccc;
+  background: #f9f9f9;
+}
+
+.install-popup-btn-install {
+  border: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.install-popup-btn-install:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.install-popup-btn-install:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .install-popup {
+    padding: 32px 24px;
+  }
+
+  .install-popup-title {
+    font-size: 24px;
+  }
+
+  .install-popup-message {
+    font-size: 14px;
+  }
+
+  .install-popup-features {
+    gap: 12px;
+  }
+
+  .install-popup-feature-icon {
+    font-size: 28px;
+  }
+
+  .install-popup-feature-text {
+    font-size: 12px;
+  }
+
+  .install-popup-actions {
+    flex-direction: column;
+  }
+
+  .install-popup-btn {
+    width: 100%;
+  }
+}
